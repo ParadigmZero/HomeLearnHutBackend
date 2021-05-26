@@ -1,1 +1,3 @@
-# project-back-end-thefullstackfive
+# How to run
+
+dotnet start
