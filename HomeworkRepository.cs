@@ -46,14 +46,14 @@ public class HomeworkRepository : BaseRepository, IHomework<Homework>
     }
 
     // Update is for Mark and Reject
-    public async Task Update(long id, long childId, string image, string comment, string annotation)
+    public async Task<Homework> Update(long id, long childId, string image, string comment, string annotation)
     {
         using var connection = CreateConnection();
 
-        await connection.ExecuteAsync(@"
+        Homework record = (Homework)await connection.QuerySingleAsync(@"
             UPDATE childrensHomework 
             SET image = @Image, comment = @Comment, annotation = @Annotation 
-            WHERE homeworkid= @HomeworkId AND childid = @ChildId;",
+            WHERE homeworkid= @HomeworkId AND childid = @ChildId RETURNING *;",
             new
             {
                 HomeworkId = id,
@@ -62,5 +62,7 @@ public class HomeworkRepository : BaseRepository, IHomework<Homework>
                 Comment = comment,
                 Annotation = annotation
             });
+
+        return record;
     }
 }

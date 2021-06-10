@@ -21,37 +21,37 @@ public class HomeworkController : ControllerBase
             var homework = await _homeworkRepository.GetAll();
             return Ok(homework);
         }
-        catch (Exception)
+        catch
         {
             return BadRequest();
         }
     }
 
     [HttpPost]
-    public async Task Insert([FromBody] Homework homework)
+    public async Task<IActionResult> Insert([FromBody] Homework homework)
     {
         try
         {
             await _homeworkRepository.Insert(homework);
+            return await GetAll();
         }
-        catch (Exception error)
+        catch
         {
-            Console.WriteLine(error.Message);
-            Console.WriteLine(error.StackTrace);
+            return BadRequest();
         }
     }
 
     [HttpPut("{id}")]
-    public async Task Update(long id, [FromBody] Child child)
+    public async Task<IActionResult> Update(long id, [FromBody] Child child)
     {
         try
         {
             await _homeworkRepository.Update(id, child.Id, child.Image, child.Comment, child.Annotation);
+            return await GetAll();
         }
-        catch (Exception error)
+        catch
         {
-            Console.WriteLine(error.Message);
-            Console.WriteLine(error.StackTrace);
+            return BadRequest();
         }
     }
 }
